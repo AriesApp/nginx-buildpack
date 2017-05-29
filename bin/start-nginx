@@ -159,6 +159,28 @@ set-vars() {
     BIND=$NGINX_SOCKET
 
     export ${!NGINX_*} PORT BIND
+
+    # set DNS for heroku
+    regex='^nameserver[[:blank:]]*(.*)'
+    ns=''
+    google_ns='8.8.8.8'
+    HEROKU_RESOLVER=$ns;
+    while read line
+    do
+        if [[ $line =~ $regex ]]
+        then
+            white='';
+            if [ -n "$ns" ]; then
+                white=' ';
+            fi
+            ns=$ns$white"${BASH_REMATCH[1]}";
+            HEROKU_RESOLVER=$ns;
+        fi
+    done < <(cat resolv.conf)
+    if [ -z "$HEROKU_RESOLVER" ]; then
+        HEROKU_RESOLVER=$google_ns;
+    fi
+    export HEROKU_RESOLVER;
 }
 
 expand-types() {
