@@ -176,7 +176,7 @@ set-vars() {
             ns=$ns$white"${BASH_REMATCH[1]}";
             HEROKU_RESOLVER=$ns;
         fi
-    done < <(cat resolv.conf)
+    done < <(cat /etc/resolv.conf)
     if [ -z "$HEROKU_RESOLVER" ]; then
         HEROKU_RESOLVER=$google_ns;
     fi
